@@ -1,18 +1,21 @@
-<?php 
-    require_once("config.php");
-    require "./law.php";
-    session_start();
+<?php
+require_once("config.php");
+require "./law.php";
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include("functions.php"); $post_id=4; 
-  $sql="SELECT * FROM posts WHERE post_id=:post_id"; 
-  $stmt=$db->prepare($sql);
-  $stmt->bindParam(':post_id', $post_id ,PDO::PARAM_INT);
-  $stmt->execute();
-  $row=$stmt->fetch();
-  $title=$row['title']; $content=$row['content']; $post_id=$row['post_id']; 
+<?php include("functions.php");
+// $post_id = 4;
+// $sql = "SELECT * FROM posts WHERE post_id=:post_id";
+// $stmt = $db->prepare($sql);
+// $stmt->bindParam(':post_id', $post_id, PDO::PARAM_INT);
+// $stmt->execute();
+// $row = $stmt->fetch();
+// $title = $row['title'];
+// $content = $row['content'];
+// $post_id = $row['post_id'];
 ?>
 
 <head>
@@ -27,19 +30,20 @@
     <!-- link icon -->
     <script src="https://kit.fontawesome.com/83128b721a.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://kit.fontawesome.com/83128b721a.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous" />
     <!-- link swiper -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
     <!-- link javascript -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="comment_scripts.js"></script>
     <script src="reply_scripts.js"></script>
 </head>
+
 <body>
     <header class="header">
         <a href="./index.php" class="logo">An<span> Ninh</span></a>
-        
+
         <nav class="navbar">
             <a href="./index.php">Home</a>
             <a href="#">Pháp luật</a>
@@ -47,164 +51,150 @@
             <a href="./trainer.php">Liên hệ</a>
         </nav>
 
-        <?php 
-            if(!empty($_POST['btnlogout'])){
-                unset($_SESSION['customerid']);
-                redirect("http://localhost:3000/loginPage.php");
-            }
-            if(empty($_SESSION['customerid'])){
-                $isLoggedIn = false;
-                echo '
+        <?php
+        if (!empty($_POST['btnlogout'])) {
+            unset($_SESSION['customerid']);
+            redirect("http://localhost:3000/loginPage.php");
+        }
+        if (empty($_SESSION['customerid'])) {
+            $isLoggedIn = false;
+            echo '
                 <div class="icons">
                     <a href="./loginPage.php" class="btn">login</a>
                     <div id="menu-btn" class="fas fa-bars"></div>
                 </div>
                 ';
-            }else{
-                $isLoggedIn = true;
-                echo'
+        } else {
+            $isLoggedIn = true;
+            echo '
                 <div class="icons">
-                    <form action="'. $_SERVER['PHP_SELF'] . '" method="POST">
+                    <form action="' . $_SERVER['PHP_SELF'] . '" method="POST">
                         <input type="submit" value="Logout" name="btnlogout" class="btn">
                     </form>
                     <div id="menu-btn" class="fas fa-bars"></div>
                 </div>
                 ';
-            }
+        }
         ?>
     </header>
 
-        <div class="container">
-            <div class="content">
-                <h1 class="heading">luật an ninh mạng</h1>
-                <?php 
-                    $idDieu = $_GET['lawID'];
-                    $lawInfo = new law();
-                    $result = $lawInfo->showLawInfo($idDieu);
-                    $isFlag = true;
-                    for($i=0; $i<count($result); $i++){
-                        $s = $result[$i];
-                        if($isFlag){
-                            echo '
-                                <h2>Chuong: <span>'.$s->chuong.'</span></h2>
-                                <h3>Noi Dung Chuong: <span>'.$s->noidungchuong.'</span></h3>
-                                <h2>Dieu: <span>'.$s->dieu.'</span></h2>
-                                <h3>Noi Dung Dieu: <span>'.$s->noidungdieu.'</span></h3>
-                            ';
-                            $isFlag=false;
-                        }
-                        echo '
-                            <h2>Khoan: <span>'.$s->khoan.'</span></h2>
-                            <h4>Noi Dung Khoan: <span>'.$s->noidungkhoan.'</span></h4>
+    <div class="container">
+        <div class="content">
+            <h1 class="heading">luật an ninh mạng</h1>
+            <?php
+            $idDieu = $_GET['lawID'];
+            $lawInfo = new law();
+            $result = $lawInfo->showLawInfo($idDieu);
+            $isFlag = true;
+            for ($i = 0; $i < count($result); $i++) {
+                $s = $result[$i];
+                if ($isFlag) {
+                    echo '
+                        <h2>Chuong: <span>' . $s->chuong . '</span></h2>
+                        <h3>Noi Dung Chuong: <span>' . $s->noidungchuong . '</span></h3>
+                        <h2>Dieu: <span>' . $s->dieu . '</span></h2>
+                        <h3>Noi Dung Dieu: <span>' . $s->noidungdieu . '</span></h3>
                         ';
-                    }
-                    echo $_SESSION['customerid'];
+                    $isFlag = false;
+                }
+                echo '
+                    <h2>Khoan: <span>' . $s->khoan . '</span></h2>
+                    <h4>Noi Dung Khoan: <span>' . $s->noidungkhoan . '</span></h4>
+                    ';
+            }
+            ?>
+        </div>
+
+        <!-- DOWNLOAD -->
+
+        <div class="getLaw">
+            <button onclick="downloadLaw(<?php echo $idDieu ?>)">Download</button>
+        </div>
+
+        <!-- COMMENT -->
+
+
+        <?php 
+            $comment = new comment();
+            $resultComment = $comment->showCommentsWithLawID($idDieu);
+        ?>
+
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!--Comment Column start -->
+                        <script type="text/javascript"></script>
+                        <hr><strong><?php echo count($resultComment) . ' ' . name(count($resultComment)); ?> </strong>
+                        <hr>
+                    </div>
+                </div>
+                <?php
+                    for($i=0; $i<count($resultComment);$i++){
+                        $s = $resultComment[$i];
                 ?>
-            </div>
-
-            <div class="getLaw">
-                <!-- <a href="#" onclick="downloadLaw(<?php echo $idDieu?>)">Download</a> -->
-                <button onclick="downloadLaw(<?php echo $idDieu?>)">Download</button>
-            </div>
-
-            
-            <div class="row">
-                <div class="col-sm-2"></div>
-                    <div class="col-sm-8">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <!--Comment Column start -->
-                                <script type="text/javascript"></script>
-                                <hr><strong><?php echo count_comment($post_id,$db).' '.name(count_comment($post_id,$db));?> </strong><hr>
-                            </div>
-                        </div>
-                        <?php 
-                        $CommentList = commentTree($post_id);
-                        foreach($CommentList as $cl){ 
-                            if($cl["parentid"]!=0){ 
-                        ?>
-                        <!--Reply-->
                         <div class="row cm_mainr">
                             <div class="col-sm-12 cm_head">
-                                <?php echo ' <div class ="reply_cm"><span class="to-user">@'.userfind($cl["parentid"],$db).'</span> replied by <strong>'.$cl["username"].'</strong> <span class="right">' .easy($cl['created']).'</span><br> </div>'; ?>
+                                <?php echo $s->customerName . ' <span class="right">' . easy($s->created) . '</span><br>'; ?>
                             </div>
-                            <div class="col-sm-12"> 
-                                <p class="reply"><?php echo $cl["cm_message"].'<br>';  ?> </p>
-                            </div>
-                        </div>
-                        <?php } else {?> 
-                        <!--Comment-->
-                        <!--Display Comment & Reply-->
-                        <div class="row cm_main">
-                            <div class="col-sm-12 cm_head">
-                                <div class="cm_author"><?php echo $cl["username"].' <span class="right">' .easy($cl['created']).'</span><br>';?></div>
-                            </div>
-                            <div class="col-sm-12"> 
-                                <p><?php echo $cl["cm_message"].'<br>';  ?> </p>
+                            <div class="col-sm-12">
+                                <p class="reply"><?php echo $s->commentMessage . '<br>';  ?> </p>
                             </div>
                         </div>
-                        <?php } ?>
-                        <!--Display Comment & Reply-->
-                        <!--Append reply form--> 
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="comment-list-boxr">
-                                    <?php 
-                                        if($cl["parentid"]!=0){ 
-                                            echo '
-                                                <a class="add_comment reply_cm cm_reply" id="reply_'.$cl["cm_id"].'" onclick="reply_form('.$cl["cm_id"].','.$post_id.')"> Reply</a>'; 
-                                            }else{ 
-                                            echo '
-                                                <span class="cm_reply"><a class="add_comment" id="reply_'.$cl["cm_id"].'" onclick="reply_form('.$cl["cm_id"].','.$post_id.')"> Reply</a></span>';
-                                            } 
-                                    ?> 
-                                    <div class="reply_area" id="reply_area_<?php echo $cl["cm_id"];?>"></div>
-                                        <div class="message-wrapcm-<?php echo $cl['cm_id'];?>"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--Append reply form-->
-                        <?php }?>
-            <hr>
+                <?php }?>
+                <hr>
+                <!--Add New Comment -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <a class="add_new_comment" onclick="checkComment()">Add a comment</a>
+                    </div>
+                </div>
+
+                <div class="new-comment">
+                    <?php 
+                        if(!empty($_POST['submitComment'])){
+                            $commentNew = $_POST['txtmessage'];
+                            $customerIDComment = $_SESSION['customerid'];
+                            $lawID = $idDieu;
+
+                            $newComment = new comment();
+                            $newComment->commentMessage = $commentNew;
+                            $newComment->customerID = $customerIDComment;
+                            $newComment->lawID = $lawID;
+                            $newComment->addNewComment($lawID);
+
+                            unset($commentNew);
+                            unset($customerIDComment);
+                            unset($lawID);
+
+                            echo '
+                                <script>
+                                    var confirmMsg = confirm("Lưu thành công. Bạn có muốn tiếp tục không?");
+                                    if (confirmMsg == true) {
+                                    deleteFields();
+                                    }
+                                </script>';
+                            // header("Location: http://localhost:3000/infoLaw.php?lawID=$lawID");
+                            // exit();
+                        }
+                    ?>
+                    <form action="" method="post" id="form">
+                        <textarea name="txtmessage" class="txtmessage form-control" placeholder="Type Comment" id="ftextarea" cols="auto" rows="2"></textarea>
+                        <input type="submit" name="submitComment" id="" onclick="return checkValidate()">
+                    </form>
+                </div>
+                <!--Comment Column end -->
+            </div>
             <!--Add New Comment -->
-            <div class="row">
-                <div class="col-sm-12">
-                    <a  class="add_new_comment" onclick="checkComment()">Add a comment </a>
-                </div>
-                </div>
-            <div class="row">
-                <div class="col-sm-12">
-            <div class="comment-list-box" >
-            <div id="frmAdd" class="new_comment_area"> 
-            <textarea name="txtmessage" class="txtmessage form-control"  placeholder="Type Comment"  id="ftextarea" cols="auto" rows="2"></textarea>
-            <br>
-            <div class="row">
-                <div class="col-sm-6">
-                    <input type="text" id="uname" placeholder="Full Name" class="uname form-control" required>
-                </div>
-                <div class="col-sm-6">
-                    <input type="email" id="uemail" class="uemail form-control"placeholder="Your Email "  required>
-                </div>
+            <div class="col-sm-2">
             </div>
-            <input type="hidden" value="<?php echo $post_id; ?>" name="postid" class="postid">
-            <br><button class="btnAddAction btn btn-primary" name="submit" onClick="callCrudAction('add',this)">Comment </button>
-            </div>
-            <div class="message-wrap">                      
-            </div>
-            </div>
-            </div>
-                    </div>
-                        <!--Comment Column end -->
-                </div>
-                    <!--Add New Comment -->
-                    <div class="col-sm-2">
-                    </div>
-                </div>
-                </div>
-            <br> 
-            <br> <br>
         </div>
-    
+    </div>
+    <br>
+    <br> <br>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
     <script src="./index.js"></script>
 
@@ -218,8 +208,15 @@
             }
         }
 
-        function checkComment(){
-            if (!isLoggedIn()) {
+        function checkComment() {
+            if (isLoggedIn()) {
+                $(document).ready(function() {
+                    $(".add_new_comment").click(function() {
+                        $(".new_comment_area").show();
+                        $('#alert').remove();
+                    });
+                });
+            } else {
                 alert("Bạn cần đăng nhập để tải xuống tài liệu.");
             }
         }
@@ -227,6 +224,21 @@
         function isLoggedIn() {
             return <?php echo ($isLoggedIn ? 'true' : 'false'); ?>;
         }
-</script>
+
+        function checkValidate(){
+                textComment = document.getElementById("ftextarea").value;
+                if(textComment == ""){
+                    alert("Please fill out all fields");
+                    return false;
+                }
+                return true;
+        }
+
+        function deleteFields() {
+            document.getElementById("form").reset();
+            document.getElementById("ftextarea").value = "";
+        }
+    </script>
 </body>
+
 </html>

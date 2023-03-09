@@ -1,6 +1,6 @@
 <?php 
 
-    include "./DBinfo.php";
+    include ('./DBinfo.php');
 
     function redirect($url, $statusCode = 303){
         header('Location: ' . $url, $statusCode);
@@ -244,5 +244,78 @@
                 echo "FALSE " . $e;
             }
         }
+    }
+
+    class comment{
+        public $id;
+        public $commentID;
+        public $commentMessage;
+        public $created;
+        public $parentID;
+        public $customerID;
+        public $customerName;
+        public $lawID;
+        public $status;
+
+        public function showCommentsWithLawID($lawID){
+            try{
+                $options = array(PDO::ATTR_EMULATE_PREPARES=>false, PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION);
+                $dsn = "mysql:host=".DBinfo::getServer().";dbname=".DBinfo::getDBname().";charset=utf8";
+                $conn = new PDO($dsn, DBinfo::getUserName(), DBinfo::getPassword(), $options);
+
+                $sql = "SELECT * FROM comment_true INNER JOIN customers ON comment_true.customerID = customers.customerid WHERE comment_true.lawID=:lawID AND comment_true.status='1' ORDER BY comment_true.id DESC;";
+
+                $stmt = $conn->prepare($sql);
+                $stmt->execute(
+                    array(
+                        ":lawID" => $lawID
+                    )
+                );
+
+                $result = array();
+                while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                    $comment = new comment();
+
+                    $comment->commentMessage = $row['commentMessage'];
+                    $comment->created = $row['created'];
+                    $comment->parentID = $row['parentID'];
+                    $comment->customerID = $row['customerID'];
+                    $comment->customerName = $row['customername'];
+                    $comment->lawID = $row['lawID'];
+                    $comment->status = $row['status'];
+
+                    array_push($result, $comment);
+                }
+
+                $conn = null;
+                return $result;
+            }catch(PDOException $e){
+                echo "False ". $e;
+            }
+        }
+
+        public function addNewComment($lawID){
+            $options = array(PDO::ATTR_EMULATE_PREPARES=>false, PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION);
+            $dsn = "mysql:host=".DBinfo::getServer().";dbname=".DBinfo::getDBname().";charset=utf8";
+            $conn = new PDO($dsn, DBinfo::getUserName(), DBinfo::getPassword(), $options);
+
+            $date = new DateTime(null, new DateTimeZone("Asia/Ho_Chi_Minh"));
+            $created = $date->format('Y-m-d H:i:s');
+
+            $sql = "INSERT INTO `comment_true` (`commentID`, `commentMessage`, `created`, `parentID`, `customerID`, `lawID`, `status`) 
+                    VALUES (0, :commentMessage, :created, 0, :customerID, :lawID, 1);";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->execute(
+                array(
+                    ":commentMessage" => $this->commentMessage,
+                    ":created" => $created,
+                    ":customerID" => $this->customerID,
+                    ":lawID" => $this->lawID,
+                )
+            );
+            $conn = null;
+        }
+
     }
 ?>
