@@ -49,6 +49,11 @@ session_start();
             <a href="#">Pháp luật</a>
             <a href="#">Tư vấn pháp luật</a>
             <a href="./trainer.php">Liên hệ</a>
+            <?php 
+                if(!empty($_SESSION['customerid'])){
+                    echo '<a href="./infoCustomer.php">Account</a>';
+                }
+            ?>
         </nav>
 
         <?php
@@ -106,10 +111,23 @@ session_start();
         </div>
 
         <!-- DOWNLOAD -->
+        <?php 
+            if(isset($_GET['lawID']) && isset($_GET['currentCount'])){
+                $download = $_GET['lawID'];
+                $current = $_GET['currentCount'];
 
+                $new = new law();
+                $newDownload = $new->updateCountDownload($download,$current); 
+            }
+        ?>
         <div class="getLaw">
-            <button onclick="downloadLaw(<?php echo $idDieu ?>)">Download</button>
+            <button id="btnDown" onclick="downloadLaw(<?php echo $idDieu.','. $result[0]->countdow ?>)">Download</button>
+            <!-- <button id="btnDownload">Download</button> -->
         </div>
+        <?php 
+            // $count = $result[1]->countdow;
+            // $newCount = $count + 1;
+        ?>
 
         <!-- COMMENT -->
 
@@ -172,11 +190,9 @@ session_start();
                                 <script>
                                     var confirmMsg = confirm("Lưu thành công. Bạn có muốn tiếp tục không?");
                                     if (confirmMsg == true) {
-                                    deleteFields();
+                                        deleteFields();
                                     }
                                 </script>';
-                            // header("Location: http://localhost:3000/infoLaw.php?lawID=$lawID");
-                            // exit();
                         }
                     ?>
                     <form action="" method="post" id="form">
@@ -200,9 +216,18 @@ session_start();
 
 
     <script>
-        function downloadLaw(idDieu) {
+
+        function downloadLaw(idDieu, currentCount) {
             if (isLoggedIn()) {
-                window.location.href = "toPDF.php?lawID=" + idDieu;
+                // let url = "http://localhost:3000/infoLaw.php";  
+                // window.location.href = url + "?lawID=" + idDieu + "&currentCount=" + currentCount + "&toPDF.php?lawID=" + idDieu; 
+                // window.location.href = "http://localhost:3000/toPDF.php?lawID=" + idDieu;
+                
+                let url1 = "http://localhost:3000/infoLaw.php";
+                let url2 = "toPDF.php?lawID=" + idDieu;
+
+                window.open(url1 + "?lawID=" + idDieu + "&currentCount=" + currentCount);
+                window.open(url2);
             } else {
                 alert("Bạn cần đăng nhập để tải xuống tài liệu.");
             }

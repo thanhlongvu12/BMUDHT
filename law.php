@@ -13,7 +13,36 @@
         public $noidungdieu;
         public $khoan;
         public $noidungkhoan;
+        public $countdow;
         public $flag;
+
+        public function addNewLaw(){
+            try {
+                $options = array(PDO::ATTR_EMULATE_PREPARES, PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION);
+                $dsn = "mysql:host=".DBinfo::getServer().";dbname=".DBinfo::getDBname().";charset=utf8";
+                $conn = new PDO($dsn,DBinfo::getUserName(),DBinfo::getPassword(),$options);
+
+                $sql = "INSERT INTO `luat` (`chuong`, `noidungchuong`, `dieu`, `noidungdieu`, `khoan`, `noidungkhoan`, `countdown`, `flag`) 
+                        VALUES (:chuong, :noidungchuong, :dieu, :noidungdieu, :khoan, :noidungkhoan, '0', '1');";
+
+                $stmt = $conn->prepare($sql);
+                $stmt -> execute(
+                    array(
+                        ":chuong" => $this->chuong,
+                        ":noidungchuong" => $this->noidungchuong,
+                        ":dieu" => $this->dieu,
+                        ":noidungdieu" => $this->noidungdieu,
+                        ":khoan" => $this->khoan,
+                        ":noidungkhoan" => $this->noidungkhoan
+                    )
+                );
+
+                redirect("http://localhost:3000/index.php");
+                $conn = null;
+            } catch (PDOException $e) {
+                echo "False" . $e;
+            }
+        }
 
         public function showLaw(){
             $options = array(PDO::ATTR_EMULATE_PREPARES, PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION);
@@ -35,6 +64,7 @@
                 $law->noidungdieu = $row['noidungdieu'];
                 $law->khoan = $row['khoan'];
                 $law->noidungkhoan = $row['noidungkhoan'];
+                $law->countdow = $row['countdown'];
                 $law->flag = $row['flag'];
 
                 array_push($arr, $law);
@@ -64,6 +94,7 @@
                 $law->noidungdieu = $row['noidungdieu'];
                 $law->khoan = $row['khoan'];
                 $law->noidungkhoan = $row['noidungkhoan'];
+                $law->countdow = $row['countdown'];
                 $law->flag = $row['flag'];
 
                 array_push($arr, $law);
@@ -100,6 +131,27 @@
 
             $conn = null;
             return $arr;
+        }
+
+        public function updateCountDownload($lawID, $newCount){
+            try {
+                $options = array(PDO::ATTR_EMULATE_PREPARES, PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION);
+                $dsn = "mysql:host=".DBinfo::getServer().";dbname=".DBinfo::getDBname().";charset=utf8";
+                $conn = new PDO($dsn, DBinfo::getUserName(), DBinfo::getPassword(), $options);
+
+                $sql = "UPDATE `luat` SET `countdown`=:newCount + 1 WHERE `dieu` = :lawID";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute(
+                    array(
+                        ":newCount" => $newCount,
+                        ":lawID" => $lawID
+                    )
+                );
+
+                $conn = null;
+            } catch (PDOException $e) {
+                echo "False " . $e;
+            }
         }
     }
 
@@ -208,8 +260,38 @@
             }
         }
 
-        public function show(){
-            
+        public function showCustomer(){
+            try {
+                $options = array(PDO::ATTR_EMULATE_PREPARES, PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION);
+                $dsn = "mysql:host=".DBinfo::getServer().";dbname=".DBinfo::getDBname().";charset=utf8";
+                $conn = new PDO($dsn, DBinfo::getUserName(), DBinfo::getPassword(), $options);
+
+                $sql = "SELECT * FROM `customers`";
+
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
+
+                $result = array();
+                while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                    $customer = new customer();
+
+                    $customer->customerID = $row['customerid'];
+                    $customer->customerName = $row['customername'];
+                    $customer->password = $row['password'];
+                    $customer->address = $row['address'];
+                    $customer->phone = $row['Phone'];
+                    $customer->email = $row['email'];
+                    $customer->type = $row['type'];
+                    $customer->flag = $row['flag'];
+
+                    array_push($result, $customer);
+                }
+
+                $conn = null;
+                return $result;
+            } catch (PDOException $e) {
+                echo "False to " . $e;
+            }
         }
 
         public function checkAdmin($customerid, $password){

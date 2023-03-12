@@ -29,6 +29,11 @@
             <a href="#">Pháp luật</a>
             <a href="#">Tư vấn pháp luật</a>
             <a href="./trainer.php">Liên hệ</a>
+            <?php 
+                if(!empty($_SESSION['customerid'])){
+                    echo '<a href="./infoCustomer.php">Account</a>';
+                }
+            ?>
         </nav>
         <?php 
             if(!empty($_POST['btnlogout'])){
