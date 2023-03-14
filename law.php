@@ -326,6 +326,73 @@
                 echo "FALSE " . $e;
             }
         }
+
+        public function showInfoCustomer($customerID){
+            try {
+                $options = array(PDO::ATTR_EMULATE_PREPARES, PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION);
+                $dsn = "mysql:host=" .DBinfo::getServer().";dbname=".DBinfo::getDBname().";charset=utf8";
+                $conn = new PDO($dsn, DBinfo::getUserName(), DBinfo::getPassword(), $options);
+
+                $sql = "SELECT * FROM `customers`WHERE `customerid` = :customerid";
+
+                $stmt = $conn->prepare($sql);
+                $stmt->execute(
+                    array(
+                        ":customerid" => $customerID
+                    )
+                );
+
+                $result = array();
+                while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                    $customer = new customer();
+
+                    $customer->customerID = $row['customerid'];
+                    $customer->customerName = $row['customername'];
+                    $customer->password = $row['password'];
+                    $customer->address = $row['address'];
+                    $customer->phone = $row['Phone'];
+                    $customer->email = $row['email'];
+                    $customer->type = $row['type'];
+                    $customer->flag = $row['flag'];
+
+                    array_push($result, $customer);
+                }
+                $conn = null;
+                return $result;
+            } catch (PDOException $e) {
+                echo $e;
+            }
+        }
+
+        public function showCustomerSearch($search){
+            $options = array(PDO::ATTR_EMULATE_PREPARES, PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION);
+            $dsn = "mysql:host=".DBinfo::getServer().";dbname=".DBinfo::getDBname().";charset=utf8";
+            $conn = new PDO($dsn,DBinfo::getUserName(),DBinfo::getPassword(),$options);
+
+            $sql = "SELECT * FROM `customers` WHERE customername LIKE '%$search%';";
+
+            $stmt = $conn -> prepare($sql);
+            $stmt->execute();
+            $arr = array();
+
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                $customerSearch = new customer();
+
+                $customerSearch->customerID = $row['customerid'];
+                $customerSearch->customerName = $row['customername'];
+                $customerSearch->password = $row['password'];
+                $customerSearch->address = $row['address'];
+                $customerSearch->phone = $row['Phone'];
+                $customerSearch->email = $row['email'];
+                $customerSearch->type = $row['type'];
+                $customerSearch->flag = $row['flag'];
+
+                array_push($arr, $customerSearch);
+            }
+
+            $conn = null;
+            return $arr;
+        }
     }
 
     class comment{
@@ -341,7 +408,7 @@
 
         public function showCommentsWithLawID($lawID){
             try{
-                $options = array(PDO::ATTR_EMULATE_PREPARES=>false, PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION);
+                $options = array(PDO::ATTR_EMULATE_PREPARES, PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION);
                 $dsn = "mysql:host=".DBinfo::getServer().";dbname=".DBinfo::getDBname().";charset=utf8";
                 $conn = new PDO($dsn, DBinfo::getUserName(), DBinfo::getPassword(), $options);
 

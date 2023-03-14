@@ -16,7 +16,40 @@ $idDieu = $_GET['lawID'];
 $lawInfo = new law();
 $result = $lawInfo->showLawInfo($idDieu);
 $isFlag = true;
-$html = '<h1>Xin Chào chương</h1>';
+$html = '
+        <div class="container">
+            <div class="header-title">
+                <div class="left-title">
+                    <p>QUỐC HỘI</p>
+                    <p>--------</p>
+                </div>
+                <div class="right-title">
+                    <p>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</p>
+                    <p>Độc lập - Tự do - Hạnh phúc</p>
+                    <p>---------------</p>
+                </div>
+            </div>
+            <div class="header-title two">
+                <div class="left-title">
+                    <p class="main-title-header">Luật số: 24/2018/QH14</p>
+                </div>
+                <div class="right-title">
+                    <p class="main-title-header">Hà Nội, ngày 12 tháng 6 năm 2018</p>
+                </div>
+            </div>
+
+            <div class="body-title">
+                <div class="title-top-body">
+                    <h2>LUẬT</h2>
+                    <h2>AN NINH MẠNG</h2>
+                </div>
+                <div class="cancu">
+                    <p>Căn cứ Hiến pháp nước Cộng hòa xã hội chủ nghĩa Việt Nam;</p>
+                    <p>Quốc hội ban hành Luật An ninh mạng.</p>
+                </div>
+            </div>   
+        </div>
+';
 for($i=0; $i<count($result); $i++){
     $s = $result[$i];
     if($isFlag){
@@ -35,7 +68,7 @@ for($i=0; $i<count($result); $i++){
 }
 
 // Tạo mã HTML và CSS
-$html = '<div class="container" id="content"><div class="content">'.nl2br($html).'</div></div>';
+// $html = '<div class="container" id="content"><div class="content">'.nl2br($html).'</div></div>';
 $css = '
 <style>
     *{ 
@@ -56,6 +89,37 @@ $css = '
     }
     ol {
         list-style-type: decimal;
+    }
+    
+    .container .header-title{
+        display: flex;
+        text-align: center;
+    }
+    
+    .container .header-title p{
+        margin-top: 0.5rem;
+    }
+    
+    .container .header-title .main-title-header{
+        top: 10rem;
+    }
+    
+    .container .header-title.two{
+        margin-top: 2rem;
+        margin-left: -3rem;
+    }
+    
+    .body-title .title-top-body{
+        margin-top: 4.5rem;
+        text-align: center;
+    }
+    
+    .body-title .title-top-body h2{
+        margin: 1rem 0;
+    }
+    
+    .body-title .cancu p{
+        margin: .5rem 0;
     }
 </style>';
 

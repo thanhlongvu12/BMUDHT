@@ -21,7 +21,7 @@
 
 	<!-- SIDEBAR -->
 	<section id="sidebar">
-		<a href="#" class="brand">
+		<a href="./dashboard.php" class="brand">
 			<i class='bx bxs-smile'></i>
 			<span class="text">AdminHub</span>
 		</a>
@@ -30,12 +30,6 @@
 				<a href="#">
 					<i class='bx bxs-dashboard' ></i>
 					<span class="text">Dashboard</span>
-				</a>
-			</li>
-			<li>
-				<a href="#">
-					<i class='bx bxs-shopping-bag-alt' ></i>
-					<span class="text">My Store</span>
 				</a>
 			</li>
 			<li>
@@ -81,9 +75,9 @@
 		<!-- NAVBAR -->
 		<nav>
 			<i class='bx bx-menu' ></i>
-			<form action="#">
+			<form action="" method="get">
 				<div class="form-input">
-					<input type="search" placeholder="Search...">
+					<input type="text" placeholder="Search..." name="searchbox" value="<?php if(!empty($_GET['searchbox'])){echo $_GET['searchbox'];}?>">
 					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
 				</div>
 			</form>
@@ -120,7 +114,7 @@
 
 			<ul class="box-info">
 				<li>
-					<a href="./addNewLaw.php">
+					<a href="">
                         <i class='bx bxs-group' ></i>
                         <span class="text">
                             <h3><?php echo count($resultCustomer)?></h3>
@@ -129,7 +123,7 @@
                     </a>
 				</li>
 				<li>
-					<a href="">
+					<a href="./addNewLaw.php">
                         <i class='bx bxs-calendar-check' ></i>
                         <span class="text">
                             <h3><?php echo count($resultLaw)?></h3>
@@ -166,20 +160,44 @@
 						</thead>
 						<tbody>
                             <?php 
-                                for($i=0; $i<count($resultCustomer); $i++){
-                                    $r = $resultCustomer[$i];
+								if(isset($_GET['searchbox'])){
+									$search = $_GET['searchbox'];
+									$customerSearch = new customer();
+									$resultSearch = $customerSearch->showCustomerSearch($search);
+									for($i=0; $i<count($resultSearch); $i++){
+										$r = $resultSearch[$i];
 
-                                    echo '
-                                    <tr>
-                                        <td>
-                                            <i class="fa-solid fa-user"></i>
-                                            <p>'.$r->customerID.'</p>
-                                        </td>
-                                        <td>'.$r->customerName.'</td>
-                                        <td><span class="status '.$r->type.'">'.$r->type.'</span></td>
-                                    </tr>
-                                    ';
-                                }
+										echo'
+											<tr>
+												<td>
+													<i class="fa-solid fa-user"></i>
+													<a href="./customerContro.php?customerid='.$r->customerID.'">
+														<p>'.$r->customerID.'</p>
+													</a>
+												</td>
+												<td>'.$r->customerName.'</td>
+												<td><span class="status '.$r->type.'">'.$r->type.'</span></td>
+											</tr>
+										';
+									}
+								}else{
+									for($i=0; $i<count($resultCustomer); $i++){
+										$r = $resultCustomer[$i];
+										
+										echo '
+											<tr>
+												<td>
+													<i class="fa-solid fa-user"></i>
+													<a href="./customerContro.php?customerid='.$r->customerID.'">
+														<p>'.$r->customerID.'</p>
+													</a>
+												</td>
+												<td>'.$r->customerName.'</td>
+												<td><span class="status '.$r->type.'">'.$r->type.'</span></td>
+											</tr>
+										';
+									}
+								}
                             ?>
 						</tbody>
 					</table>

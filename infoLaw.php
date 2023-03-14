@@ -6,17 +6,7 @@ session_start();
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include("functions.php");
-// $post_id = 4;
-// $sql = "SELECT * FROM posts WHERE post_id=:post_id";
-// $stmt = $db->prepare($sql);
-// $stmt->bindParam(':post_id', $post_id, PDO::PARAM_INT);
-// $stmt->execute();
-// $row = $stmt->fetch();
-// $title = $row['title'];
-// $content = $row['content'];
-// $post_id = $row['post_id'];
-?>
+<?php include("functions.php");?>
 
 <head>
     <meta charset="UTF-8">
@@ -122,12 +112,7 @@ session_start();
         ?>
         <div class="getLaw">
             <button id="btnDown" onclick="downloadLaw(<?php echo $idDieu.','. $result[0]->countdow ?>)">Download</button>
-            <!-- <button id="btnDownload">Download</button> -->
         </div>
-        <?php 
-            // $count = $result[1]->countdow;
-            // $newCount = $count + 1;
-        ?>
 
         <!-- COMMENT -->
 
@@ -169,7 +154,7 @@ session_start();
                     </div>
                 </div>
 
-                <div class="new-comment">
+                <div class="new-comment" style="display: none;">
                     <?php 
                         if(!empty($_POST['submitComment'])){
                             $commentNew = $_POST['txtmessage'];
@@ -212,17 +197,13 @@ session_start();
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
-    <script src="./index.js"></script>
+    <script src="./assets/javascript/index.js"></script>
 
 
     <script>
 
         function downloadLaw(idDieu, currentCount) {
-            if (isLoggedIn()) {
-                // let url = "http://localhost:3000/infoLaw.php";  
-                // window.location.href = url + "?lawID=" + idDieu + "&currentCount=" + currentCount + "&toPDF.php?lawID=" + idDieu; 
-                // window.location.href = "http://localhost:3000/toPDF.php?lawID=" + idDieu;
-                
+            if (isLoggedIn()) { 
                 let url1 = "http://localhost:3000/infoLaw.php";
                 let url2 = "toPDF.php?lawID=" + idDieu;
 
@@ -237,12 +218,12 @@ session_start();
             if (isLoggedIn()) {
                 $(document).ready(function() {
                     $(".add_new_comment").click(function() {
-                        $(".new_comment_area").show();
+                        $(".new-comment").show();
                         $('#alert').remove();
                     });
                 });
             } else {
-                alert("Bạn cần đăng nhập để tải xuống tài liệu.");
+                alert("Bạn cần đăng nhập để bình luận tài liệu.");
             }
         }
 

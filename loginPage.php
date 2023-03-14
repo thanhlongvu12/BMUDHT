@@ -37,7 +37,7 @@ include("./header.php");
                 $_SESSION['customerid'] = $customerid;
                 $_SESSION['loggined'] = true;
                 if (count($checkAdminLogin) > 0){
-                    redirect("http://localhost:3000/admin/dashboard.php");
+                    redirect("http://localhost:3000/dashboard.php");
                 }else{
                     redirect("http://localhost:3000/index.php");
                 }
@@ -58,7 +58,7 @@ include("./header.php");
             </div>
             <div class="line-input">
                 <label for="">Password:</label>
-                <input type="text" name="password" id="" placeholder="">
+                <input type="password" name="password" id="" placeholder="">
             </div>
             
             <input type="submit" name="btnLogin" id="" value="Login">

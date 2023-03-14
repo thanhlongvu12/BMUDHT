@@ -139,6 +139,17 @@ section{
     border: none;
 }
 
+.header .icons form{
+    font-size: 1.5rem;
+    letter-spacing: .1rem;
+    color: #fff;
+    background-color: var(--main-color);
+    font-weight: 500;
+    text-transform: uppercase;
+    padding: 0.8rem 2rem;
+    border: none;
+}
+
 .header .icons a:hover{
     color: var(--main-color);
     background: #fff;
@@ -156,4 +167,78 @@ section{
 .container{
     margin-top: 15rem;
     padding: 0 9rem;
+}
+
+
+@media (max-width:991px){
+    html{
+        font-size: 55%;
+    }
+    .header{
+        padding: 1.5rem;
+    }
+
+    .header.active{
+        padding: 2rem;
+    }
+
+    selection{
+        padding: 2rem;
+    }
+}
+
+/* for maxwidth 768px */
+
+@media (max-width:768px){
+    html{
+        font-size: 50%;
+    }
+    #menu-btn{
+        display: inline-block;
+    }
+
+    .header .navbar{
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        background: rgba(0,0,0,0.9);
+        border-top: .1rem solid #fff;
+        clip-path: polygon(0 0, 100% 0 , 100% 0 , 0 0); 
+    }
+
+    .header .navbar.active{
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .header .navbar a{
+         display: block;
+         margin: 2rem;
+         font-size: 2rem;
+    }
+
+    .feature .feature-slider .box .content h3{
+        padding: 1rem;
+    }
+
+    .testimonial .box-container{
+        padding: 1rem 0;
+    }
+
+    .testimonial .box-container .box{
+        margin-top: 6rem;
+    }
+}
+
+/* maxwidth 450 */
+@media (max-width:450px){
+    html{
+        font-size: 45%;
+    }
+
+    .header .icons .a{
+        letter-spacing: none;
+        font-size: 1.3rem;
+        padding: 1rem;
+    }
 }
