@@ -13,6 +13,7 @@
         public $noidungdieu;
         public $khoan;
         public $noidungkhoan;
+        public $muc;
         public $countdow;
         public $flag;
 
@@ -64,6 +65,7 @@
                 $law->noidungdieu = $row['noidungdieu'];
                 $law->khoan = $row['khoan'];
                 $law->noidungkhoan = $row['noidungkhoan'];
+                $law->muc =$row['muc'];
                 $law->countdow = $row['countdown'];
                 $law->flag = $row['flag'];
 
@@ -94,6 +96,7 @@
                 $law->noidungdieu = $row['noidungdieu'];
                 $law->khoan = $row['khoan'];
                 $law->noidungkhoan = $row['noidungkhoan'];
+                $law->muc = $row['muc'];
                 $law->countdow = $row['countdown'];
                 $law->flag = $row['flag'];
 
@@ -152,6 +155,27 @@
             } catch (PDOException $e) {
                 echo "False " . $e;
             }
+        }
+
+        public function getCountDownload(){
+            $options = array(PDO::ATTR_EMULATE_PREPARES, PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION);
+            $dsn = "mysql:host=".DBinfo::getServer().";dbname=".DBinfo::getDBname().";charset=utf8";
+            $conn = new PDO($dsn, DBinfo::getUserName(), DBinfo::getPassword(), $options);
+
+            $sql = "SELECT * FROM luat GROUP BY countdown;";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+
+            $result = array();
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                $r = new law();
+
+                $r->countdow = $row['countdown'];
+                array_push($result, $r);
+            }
+
+            $conn = null;
+            return $result;
         }
     }
 

@@ -95,6 +95,8 @@
             $resultLaw = $law->showLaw();
             $customer = new customer();
             $resultCustomer = $customer->showCustomer();
+			$countDownload = new law();
+			$retultCountDownload = $countDownload->getCountDownload();
         ?>
 		<main>
 			<div class="head-title">
@@ -135,7 +137,15 @@
 					<a href="">
                         <i class='bx bxs-dollar-circle' ></i>
                         <span class="text">
-                            <h3>$2543</h3>
+							<?php 
+								$total = 0;
+								for($i=0; $i<count($retultCountDownload); $i++){
+									$r = $retultCountDownload[$i];
+
+									$total += $r->countdow;
+								}
+							?>
+                            <h3><?php echo $total?></h3>
                             <p>Số luật tải về</p>
                         </span>
                     </a>

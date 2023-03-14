@@ -81,21 +81,35 @@ session_start();
             $lawInfo = new law();
             $result = $lawInfo->showLawInfo($idDieu);
             $isFlag = true;
+            $isCheckKhoan = true;
             for ($i = 0; $i < count($result); $i++) {
                 $s = $result[$i];
+                $r;
+                if($i>0){
+                    $r = $i - 1;
+                }else{
+                    $r = $i;
+                }
+                $a = $result[$r];
                 if ($isFlag) {
                     echo '
-                        <h2>Chuong: <span>' . $s->chuong . '</span></h2>
-                        <h3>Noi Dung Chuong: <span>' . $s->noidungchuong . '</span></h3>
-                        <h2>Dieu: <span>' . $s->dieu . '</span></h2>
-                        <h3>Noi Dung Dieu: <span>' . $s->noidungdieu . '</span></h3>
+                        <h2>Chương: <span>' . $s->chuong . '</span></h2>
+                        <h3>Nội Dung Chuong: <span>' . $s->noidungchuong . '</span></h3>
+                        <h2>Điều: <span>' . $s->dieu . '</span></h2>
+                        <h3>Nội Dung Điều: <span>' . $s->noidungdieu . '</span></h3>
                         ';
                     $isFlag = false;
                 }
-                echo '
-                    <h2>Khoan: <span>' . $s->khoan . '</span></h2>
-                    <h4>Noi Dung Khoan: <span>' . $s->noidungkhoan . '</span></h4>
+                if($a->khoan != $s->khoan){
+                    echo '
+                    <h2>Khoản: <span>' . $s->khoan . '</span></h2>
+                    <h4>Nội Dung khoản: <span>' . $s->noidungkhoan . '</span></h4>
                     ';
+                }
+                echo '
+                    <p>'.$s->muc.'</p>
+                ';
+                
             }
             ?>
         </div>
